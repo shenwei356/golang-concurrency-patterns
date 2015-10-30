@@ -31,7 +31,7 @@ func main() {
 		// sort
 		keys := make([]int, len(buffer))
 		i := 0
-		for k, _ := range buffer {
+		for k := range buffer {
 			keys[i] = k
 			i++
 		}
@@ -54,15 +54,15 @@ func main() {
 
 	// mapper
 	var wg sync.WaitGroup
-	tokens := make(chan int, ncpus)
+	// tokens := make(chan int, ncpus) # for cases jobs not coming from chan
 	for i := range in {
 		// fmt.Println("read from in", i)
-		tokens <- 1
+		// tokens <- 1
 		wg.Add(1)
 		go func(i int) {
 			defer func() {
 				wg.Done()
-				<-tokens
+				// <-tokens
 			}()
 			fmt.Println("work with", i)
 			time.Sleep(time.Millisecond * time.Duration(rand.Int31n(10000)))
@@ -72,5 +72,5 @@ func main() {
 	}
 	wg.Wait()
 	close(out)
-	<-done
+	<-done // wait reducer
 }
