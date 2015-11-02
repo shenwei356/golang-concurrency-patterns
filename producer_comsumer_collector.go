@@ -13,7 +13,7 @@ func main() {
 	ncpus := runtime.NumCPU()
 	runtime.GOMAXPROCS(ncpus)
 
-	// reducer
+	// collector
 	out := make(chan int, ncpus)
 	done := make(chan int)
 	go func() {
@@ -52,7 +52,7 @@ func main() {
 		close(in)
 	}()
 
-	// mapper
+	// comsumer
 	var wg sync.WaitGroup
 	// tokens := make(chan int, ncpus) # for cases jobs not coming from chan
 	for i := range in {
